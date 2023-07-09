@@ -1,0 +1,5 @@
+node_modules
+cypress/excels/*
+cypress/cache.json
+FAN Orders Romania.xlsx
+cypress.env.json
