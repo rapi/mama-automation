@@ -8,15 +8,16 @@ const isDate = (string) => {
 }
 const convert = async () => {
     const fs = require('fs')
-
     const {mtime} = fs.statSync('../FAN Orders Romania.xlsx');
     let cache = {}
     try {
         cache = JSON.parse(fs.readFileSync('cache.json'))
     } catch (e) {
     }
+
     if (mtime.toString() !== cache.lastUpdate) {
         fs.readdirSync('excels').forEach(f => fs.rmSync(`excels/${f}`));
+        
         const Excel = require('exceljs')
         const workbook = new Excel.Workbook();
         await workbook.xlsx.readFile('../FAN Orders Romania.xlsx');
@@ -24,7 +25,7 @@ const convert = async () => {
         let i = 1;
 
         workbook.eachSheet(function (worksheet, sheetId) {
-            if ((worksheet.name==="07.07.2023 ")) {
+            if (isDate(worksheet.name)) {
                 const name=worksheet.name.trim().replaceAll(",",".")
 
                 const sheet = []

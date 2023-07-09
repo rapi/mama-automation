@@ -35,6 +35,11 @@ describe("spec.cy.js", () => {
             })
 
 
+            //id
+            console.log(`Set date for ${name}`)
+            cy.get(".tr-date-factura-noua > .td-factura-title > .txt-numar-factura-registru").type(order)
+
+
             //date
             console.log(`Set date for ${name}`)
             cy.get(".tr-date-factura-noua > .td-data-emitere > .font-weight-normal").type(date).type('{enter}')
@@ -52,6 +57,8 @@ describe("spec.cy.js", () => {
                 console.log(`Set existing client for ${name}`)
 
             } else {
+                try{
+
                 // add new client
                 console.log(`Add new client for ${name}`)
                 data.click()
@@ -63,28 +70,31 @@ describe("spec.cy.js", () => {
                 cy.get(".select2-results__option").click()
                 cy.get(".select2-search__field").type(cityM.replaceAll(' ', '-'))
                 cy.wait(1000)
-                cy.get(".select2-results__option").click()
+                cy.get(".select2-results__option:first").click()
 
                 //address
                 console.log(`Setup address for client ${name}`)
                 cy.wait(1000)
-                cy.get('#Client_Adresa1').type(address)
+                cy.get('#Client_Adresa1').type("Strada: "+street)
                 cy.get('.modal-editare-client',{timeout:100000}).should('not.exist');
                 // cy.get('.btn-salveaza-client').click()
+            }
+            catch(e){}
             }
 
 
             //product
             console.log(`Setup product for client ${name}`)
-            const products=product.split(")")
+            const products=product
+            .split(" )")
             products.splice(-1)
             for(const j in products){
                 cy.wait(1500)
                 console.log(products[j])
                 const code=products[j].split(":")[0].trim()
-                console.log({code:products[j].split(" -  ")[0].split('(')})
+                console.log({code:products[j].split(" -  ")[0].split(' ( ')})
 
-                const price=products[j].split(" -  ")[0].split('(')[1].trim()
+                const price=products[j].split(" -  ")[0].split(' ( ')[1].trim()
                 console.log({code,price})
 
                 const quantity=products[j].split(" -  ")[1].trim()

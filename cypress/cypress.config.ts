@@ -8,7 +8,7 @@ export default defineConfig({
     specPattern: '**/*.cy.ts',
     setupNodeEvents(on, config) {
       on('task', {
-        convert:convert
+        convert
       })
     },
   },
