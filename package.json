@@ -1,7 +1,7 @@
 {
   "name": "mama-work",
   "scripts": {
-    "open": "CYPRESS_NO_COMMAND_LOG=1 cypress open --config-file cypress/cypress.config.ts --config pageLoadTimeout=100000,watchForFileChanges=false",
+    "open": "cypress open --config-file cypress/cypress.config.ts --config pageLoadTimeout=100000,watchForFileChanges=false",
     "convert": "node convert.js"
   },
   "version": "1.0.0",

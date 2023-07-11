@@ -76,17 +76,16 @@ describe("spec.cy.js", () => {
                 cy.get("#Client_Telefon1").type(phone)
                 console.log(`Setup address for client ${name}`)
                 cy.wait(1000)
-                cy.get('#Client_Adresa1').type("Strada: "+address.split('str.')?.[1]??street.replaceAll('str.',''))
+                cy.get('#Client_Adresa1').type("Strada: " + street.replaceAll('str.', '').replaceAll('str', ''))
 
 
                 cy.get(".judet>span").click()
-                cy.get(".select2-search__field").type(judet)
-                cy.get(".select2-results__option").click()
+                cy.get(".select2-search__field").type(judet.trim().replaceAll(" ","-"))
+                cy.get(".select2-results__option:last").click()
                 // option
-                const option = await promisify(cy.get(".select2-search__field:first").type(cityM.replaceAll(' ', '-')))
+                const option = await promisify(cy.get(".select2-search__field:first").type(cityM.trim().replaceAll(' ', '-')))
                 if (option.length)
-                    cy.get(option).click()
-
+                    option.click()
                 cy.wait(1000)
                 cy.get(".select2-results__option:first").click()
 
@@ -96,40 +95,35 @@ describe("spec.cy.js", () => {
                 cy.get('.modal-editare-client', {timeout: 100000}).should('not.exist');
 
             }
-
-
             //product
             console.log(`Setup product for client ${name}`)
             const products = product
                 .split(" )")
             products.splice(-1)
-            for (const j in products) {
+            for(const j in products){
                 cy.wait(1500)
-
-                const code = products[j].split(":")[0].trim()
-                const price = products[j].split(" -  ")[0].split(' ( ')[1].trim()
-                const quantity = products[j].split(" -  ")[1].trim()
+                const code=products[j].split(":")[0].trim()
+                const price=(products[j]+")").match(/\(([^)]+)\)/g).pop().replace("(",'').split('-')[0].trim()
+                const quantity=(products[j]+")").match(/\(([^)]+)\)/g).pop().replace(")",'').split('-')[1].trim()
                 cy.get(".td-date-produs:last > #scrollable-dropdown-menu > .twitter-typeahead > .tt-input").type(code)
-                cy.get('.td-date-produs:last .tt-suggestion', {timeout: 100000}).should('exist');
+                cy.get('.td-date-produs:last').find(".tt-suggestion",{timeout:100000}).should("exist")
+                const suggentions = await promisify(cy.get('.td-date-produs:last').find(".tt-suggestion"));
+                for (const el of suggentions){
+                    console.log(el.innerText)
 
-                const suggentions = await promisify(cy.get('.td-date-produs:last .tt-suggestion'));
-                console.log(code,suggentions)
+                    if(!String(el.innerText).includes("(")) {
+                        console.log('click',el.innerText)
 
-                for (const el of suggentions) {
-
-                    if (!String(el.innerText).includes(" ( ")) {
-                    console.log('select',el)
-                        cy.get(el).click()
+                        el.click()
                         break;
                     }
-
                 }
                 cy.wait(1000)
 
-                cy.get(".td-cantitate:last .text-box").type(quantity, {force: true})
-                cy.get(".td-total:last").type(String(parseFloat(quantity) * parseFloat(price)))
+                cy.get(".td-cantitate:last .text-box").type(quantity,{force: true})
+                cy.get(".td-um:last").type('buc').type("{enter}")
+                cy.get(".td-total:last").type(String(parseFloat(quantity)*parseFloat(price)))
                 cy.get(".td-tva:last").type("19")
-                cy.get(".td-um:last").type("buc").type("{enter}")
 
                 cy.get(".btn-adauga-factura-continut").click()
             }
