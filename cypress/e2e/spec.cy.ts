@@ -76,19 +76,22 @@ describe("spec.cy.js", () => {
                 cy.get("#Client_Telefon1").type(phone)
                 console.log(`Setup address for client ${name}`)
                 cy.wait(1000)
-                cy.get('#Client_Adresa1').type("Strada: " + street.replaceAll('str.', '').replaceAll('str', ''))
+                cy.get('#Client_Adresa1').type(address.split(',').splice(2).join(','))
 
 
                 cy.get(".judet>span").click()
                 cy.get(".select2-search__field").type(judet.trim().replaceAll(" ","-"))
                 cy.get(".select2-results__option:last").click()
-                // option
-                const option = await promisify(cy.get(".select2-search__field:first").type(cityM.trim().replaceAll(' ', '-')))
-                if (option.length)
-                    option.click()
+                await promisify(cy.get(".select2-search__field:first").type(cityM.trim().replaceAll(' ', '-')))
                 cy.wait(1000)
-                cy.get(".select2-results__option:first").click()
 
+                const elements=await promisify(cy.get('.select2-results__option'))
+                for(const element of elements){
+                    if(element.innerText!=="Selecteaza"){
+                        cy.get(element).click()
+                        break;
+                    }
+                }
                 //address
                 // cy.get('.close-modal-client:first').click()
 
@@ -138,7 +141,7 @@ describe("spec.cy.js", () => {
                     element.click()
                 }
             })
-            cy.get('[placeholder="Total"]:last').type("15.00").type("{enter}")
+            cy.get('[placeholder="Total"]:last').type("18.00").type("{enter}")
 
             console.log(`Wait for save ${name}`)
             cy.scrollTo('top') // Scroll 'sidebar' to its bottom
