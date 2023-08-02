@@ -10,7 +10,7 @@ describe("spec.cy.js", () => {
         cy.visit(Cypress.env('URL'))
         cy.get('#UserName').type(Cypress.env('EMAIL'))
         cy.get('#Password').type(Cypress.env('PASSWORD'))
-        cy.get('button[type="submit"]').click()
+        cy.get('.btn-primary').click()
         cy.get('.btn-adauga-factura-inline').click()
         cy.wait(1000)
         for (const i in items) {
@@ -80,7 +80,9 @@ describe("spec.cy.js", () => {
 
 
                 cy.get(".judet>span").click()
-                cy.get(".select2-search__field").type(judet.trim().replaceAll(" ","-"))
+                // Liza deleted (Satu Mare -> Satu-Mare for 'judet')
+                cy.get(".select2-search__field").type(judet.trim())
+                // cy.get(".select2-search__field").type(judet.trim().replaceAll(" ","-"))
                 cy.get(".select2-results__option:last").click()
                 await promisify(cy.get(".select2-search__field:first").type(cityM.trim().replaceAll(' ', '-')))
                 cy.wait(1000)
@@ -95,7 +97,12 @@ describe("spec.cy.js", () => {
                 //address
                 // cy.get('.close-modal-client:first').click()
 
-                cy.get('.modal-editare-client', {timeout: 100000}).should('not.exist');
+                // LIZA
+                cy.get('.btn-salveaza-client').click();
+                cy.get('.modal-editare-client', {timeout: 20000}).should('not.exist');
+                // Liza commented the next row
+                //cy.get('.modal-editare-client', {timeout: 100000}).should('not.exist');
+
 
             }
             //product
@@ -149,7 +156,12 @@ describe("spec.cy.js", () => {
             // cy.get('.btn-close-factura').click()
             // cy.get('.btn-adauga-factura-inline').click()
 
-            await promisify(cy.get('.td-date-produs:first > #scrollable-dropdown-menu > .twitter-typeahead > .tt-input', {timeout: 1000000}).should('have.value', ""))
+            //LIZA commented the next row
+            //await promisify(cy.get('.td-date-produs:first > #scrollable-dropdown-menu > .twitter-typeahead > .tt-input', {timeout: 1000000}).should('have.value', ""))
+            // LIZA
+            cy.get(".btn-salveaza-factura").click();
+            cy.wait(1500);
+            cy.get('.btn-adauga-factura-inline').click();
 
             // console.log('gogo')
         }
