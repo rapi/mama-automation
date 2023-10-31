@@ -157,7 +157,7 @@ describe("spec.cy.js", () => {
             // cy.get('.btn-adauga-factura-inline').click()
 
             //LIZA commented the next row
-            //await promisify(cy.get('.td-date-produs:first > #scrollable-dropdown-menu > .twitter-typeahead > .tt-input', {timeout: 1000000}).should('have.value', ""))
+            // await promisify(cy.get('.td-date-produs:first > #scrollable-dropdown-menu > .twitter-typeahead > .tt-input', {timeout: 1000000}).should('have.value', ""))
             // LIZA
             cy.get(".btn-salveaza-factura").click();
             cy.wait(1500);
